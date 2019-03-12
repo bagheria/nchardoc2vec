@@ -1,4 +1,4 @@
-import word2vec_medic
+import cgrams2vec
 import gensim
 import logging
 import os
@@ -22,24 +22,26 @@ if __name__ == '__main__':
     # read the tokenized texts into a list
     # each text item becomes a series of words
     # so this becomes a list of lists
-    y_train = word2vec_medic.read_target(data_file)
-    documents = list(word2vec_medic. read_input(data_file))
+    t = cgrams2vec.cgrams2vec(data_file)
+    # y_train = word2vec_medic.read_target(data_file)
+    # documents = list(word2vec_medic.read_input(data_file))
     logging.info("Done reading data file")
+    t.train_skipgram()
 
     # build vocabulary and train model
     model = gensim.models.Word2Vec(
-        documents,
+        t.documents,
         size=150,
         window=10,
         min_count=2,
         workers=10)
     # Default algo in Gensim is CBOW. It is used if you simply call gensim.models.Word2Vec(sentences)
     # In order to use skipgram run gensim.models.Word2Vec(sentences, sg=1)
-    model.train(documents, total_examples=len(documents), epochs=10)
+    model.train(t.documents, total_examples=len(t.documents), epochs=10)
 #    model.save("medic-word2vec.model")
 
     model_ted = gensim.models.FastText(
-        documents,
+        t.documents,
         size=100,
         window=5,
         min_count=2,
@@ -105,7 +107,7 @@ if __name__ == '__main__':
     ]
 
     for name, model in all_models:
-        score = cross_val_score(model, documents, y_train, cv=5).mean()
+        score = cross_val_score(model, t.documents, t.y_train, cv=5).mean()
         print(name, score)
 
     # scores = sorted([(name, cross_val_score(model, documents, y_train, cv=5).mean())
