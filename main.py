@@ -22,11 +22,13 @@ if __name__ == '__main__':
     # read the tokenized texts into a list
     # each text item becomes a series of words
     # so this becomes a list of lists
-    t = cgrams2vec.cgrams2vec(data_file)
+    t = cgrams2vec.cgrams2vec(data_file, num_epochs=2)
+    t.create_dataset()
+    t.train_embedding()
     # y_train = word2vec_medic.read_target(data_file)
     # documents = list(word2vec_medic.read_input(data_file))
     logging.info("Done reading data file")
-    t.train_skipgram()
+    # t.train_skipgram()
 
     # build vocabulary and train model
     model = gensim.models.Word2Vec(
@@ -66,25 +68,25 @@ if __name__ == '__main__':
     svc_tfidf = Pipeline(
         [("tfidf_vectorizer", TfidfVectorizer(analyzer=lambda x: x)), ("linear svc", SVC(kernel="linear"))])
 
-    etree_w2v = Pipeline([("word2vec vectorizer", word2vec_medic.MeanEmbeddingVectorizer(w2v)),
+    etree_w2v = Pipeline([("word2vec vectorizer", cgrams2vec.MeanEmbeddingVectorizer(w2v)),
                           ("extra trees", ExtraTreesClassifier(n_estimators=200))])
-    etree_w2v_tfidf = Pipeline([("word2vec vectorizer", word2vec_medic.TfidfEmbeddingVectorizer(w2v)),
+    etree_w2v_tfidf = Pipeline([("word2vec vectorizer", cgrams2vec.TfidfEmbeddingVectorizer(w2v)),
                                 ("extra trees", ExtraTreesClassifier(n_estimators=200))])
-    svc_w2v = Pipeline([("word2vec vectorizer", word2vec_medic.MeanEmbeddingVectorizer(w2v)),
+    svc_w2v = Pipeline([("word2vec vectorizer", cgrams2vec.MeanEmbeddingVectorizer(w2v)),
                           ("extra trees", SVC(kernel="linear"))])
-    svc_w2v_tfidf = Pipeline([("word2vec vectorizer", word2vec_medic.TfidfEmbeddingVectorizer(w2v)),
+    svc_w2v_tfidf = Pipeline([("word2vec vectorizer", cgrams2vec.TfidfEmbeddingVectorizer(w2v)),
                                 ("extra trees", SVC(kernel="linear"))])
-    gp_w2v = Pipeline([("word2vec vectorizer", word2vec_medic.MeanEmbeddingVectorizer(w2v)),
+    gp_w2v = Pipeline([("word2vec vectorizer", cgrams2vec.MeanEmbeddingVectorizer(w2v)),
                         ("extra trees", GaussianProcessClassifier(1.0 * RBF(1.0)))])
-    gp_w2v_tfidf = Pipeline([("word2vec vectorizer", word2vec_medic.TfidfEmbeddingVectorizer(w2v)),
+    gp_w2v_tfidf = Pipeline([("word2vec vectorizer", cgrams2vec.TfidfEmbeddingVectorizer(w2v)),
                               ("extra trees", GaussianProcessClassifier(1.0 * RBF(1.0)))])
-    svm_sig_w2v = Pipeline([("word2vec vectorizer", word2vec_medic.MeanEmbeddingVectorizer(w2v)),
+    svm_sig_w2v = Pipeline([("word2vec vectorizer", cgrams2vec.MeanEmbeddingVectorizer(w2v)),
                         ("extra trees", SVC(kernel="sigmoid"))])
-    svm_sig_w2v_tfidf = Pipeline([("word2vec vectorizer", word2vec_medic.TfidfEmbeddingVectorizer(w2v)),
+    svm_sig_w2v_tfidf = Pipeline([("word2vec vectorizer", cgrams2vec.TfidfEmbeddingVectorizer(w2v)),
                               ("extra trees", SVC(kernel="sigmoid"))])
-    etree_c2v = Pipeline([("word2vec vectorizer", word2vec_medic.MeanEmbeddingVectorizer(c2v)),
+    etree_c2v = Pipeline([("word2vec vectorizer", cgrams2vec.MeanEmbeddingVectorizer(c2v)),
                           ("extra trees", ExtraTreesClassifier(n_estimators=200))])
-    etree_c2v_tfidf = Pipeline([("word2vec vectorizer", word2vec_medic.TfidfEmbeddingVectorizer(c2v)),
+    etree_c2v_tfidf = Pipeline([("word2vec vectorizer", cgrams2vec.TfidfEmbeddingVectorizer(c2v)),
                                 ("extra trees", ExtraTreesClassifier(n_estimators=200))])
 
     all_models = [
