@@ -146,7 +146,7 @@ class cgrams2vec:
     def create_cbow_dataset(self):
         data = []
         for sentence in self.documents:
-            # change to using CONTEXT_SIZE
+            # change to using CONTEXT_SIZE, use create_dataset function
             for i in range(2, len(sentence) - 2):
                 context = [sentence[i - 2], sentence[i - 1],
                            sentence[i + 1], sentence[i + 2]]
@@ -176,7 +176,7 @@ class cgrams2vec:
     def train_cbow(self):
         hidden_size = 64
         loss_fn = nn.NLLLoss()
-        self.model = CBOW(self.vocab_size, self.embd_size, self.CONTEXT_SIZE, hidden_size)
+        self.model = CBOW(self.vocab_size, self.embd_size, self.context_size, hidden_size)
         # print(model)
         optimizer = optim.SGD(self.model.parameters(), lr=self.learning_rate)
         cbow_train = self.create_cbow_dataset()
