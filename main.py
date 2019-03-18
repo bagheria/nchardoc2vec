@@ -63,6 +63,12 @@ if __name__ == '__main__':
     LR_w2v_mean_gensim = Pipeline([("word2vec vectorizer", cgrams2vec.MeanEmbeddingVectorizer(w2v)),
                                    ("LR", LogisticRegression(random_state=0,
                                                              solver='lbfgs',
+                                                             max_iter=100,
+                                                             multi_class='multinomial'))])
+    LR_w2v_tfidf_gensim = Pipeline([("word2vec vectorizer", cgrams2vec.TfidfEmbeddingVectorizer(w2v)),
+                                   ("LR", LogisticRegression(random_state=0,
+                                                             solver='lbfgs',
+                                                             max_iter=100,
                                                              multi_class='multinomial'))])
 
 
@@ -108,6 +114,7 @@ if __name__ == '__main__':
         # ("svc", svc),
         # ("svc_tfidf", svc_tfidf),
         ("LR_w2v_mean_gensim", LR_w2v_mean_gensim),
+        ("LR_w2v_tfidf_gensim", LR_w2v_tfidf_gensim),
         # ("w2v_tree", etree_w2v),
         # ("w2v_tree_tfidf", etree_w2v_tfidf),
         # ("w2v_svc", svc_w2v),
