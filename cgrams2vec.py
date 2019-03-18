@@ -100,11 +100,11 @@ def read_input(train_path):
         for j, input_file in enumerate(os.listdir(data_path)):
             if j % 100 == 0:
                 s = s + 100
-                logging.info("read {0} sentences".format(s))
+                logging.info("read {0} documents".format(s))
             with open(data_path + input_file, 'rb') as f:
-                for line in f:
-                    # do some pre-processing and return list of words for each text
-                    yield preprocess(line)
+                # for line in f:
+                # do some pre-processing and return list of words for each text
+                yield preprocess(f.read())
 
 
 def read_target(train_path):
