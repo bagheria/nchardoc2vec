@@ -82,21 +82,9 @@ if __name__ == '__main__':
                                                               max_iter=100,
                                                               multi_class='multinomial'))])
 
-    # run all the models with logistic regression:
-    all_models = [
-        ("LR_w2v_mean", LR_w2v_mean),
-        ("LR_w2v_tfidf", LR_w2v_tfidf),
-        ("LR_c2v_mean", LR_c2v_mean),
-        ("LR_c2v_tfidf", LR_c2v_tfidf),
-    ]
-
-    for name, model in all_models:
-        score = cross_val_score(model, t.documents, t.y_train, cv=5).mean()
-        print(name, score)
-
     # doc2vec model
     tagged_data_train = [TaggedDocument(words=t.documents[i], tags=[str(i)]) for i, _d in enumerate(t.documents)]
-    max_epochs = 100
+    max_epochs = 50  # 100
     vec_size = 20
     alpha = 0.025
     d_model = Doc2Vec(size=vec_size,
@@ -115,6 +103,19 @@ if __name__ == '__main__':
         # fix the learning rate, no decay
         d_model.min_alpha = d_model.alpha
 
+    # run word2vec models with logistic regression:
+    all_models = [
+        ("LR_w2v_mean", LR_w2v_mean),
+        ("LR_w2v_tfidf", LR_w2v_tfidf),
+        ("LR_c2v_mean", LR_c2v_mean),
+        ("LR_c2v_tfidf", LR_c2v_tfidf),
+    ]
+
+    for name, model in all_models:
+        score = cross_val_score(model, t.documents, t.y_train, cv=5).mean()
+        print(name, score)
+
+    # run doc2vec model
     X_train_doc2vec = vector_for_learning(d_model, tagged_data_train)
     logreg = LogisticRegression(n_jobs=1, C=1e5)
     print("LR_doc2vec ", cross_val_score(logreg, X_train_doc2vec, t.y_train, cv=5).mean())
