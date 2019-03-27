@@ -51,23 +51,23 @@ if __name__ == '__main__':
     w2v = dict(zip(model.wv.index2word, model.wv.syn0))
     c2v = dict(zip(model_ted.wv.index2word, model_ted.wv.syn0))
 
-    LR_w2v_mean_gensim = Pipeline([("word2vec vectorizer", cgrams2vec.MeanEmbeddingVectorizer(w2v)),
+    LR_w2v_mean = Pipeline([("word2vec vectorizer", cgrams2vec.MeanEmbeddingVectorizer(w2v)),
                                    ("LR", LogisticRegression(random_state=0,
                                                              solver='lbfgs',
                                                              max_iter=100,
                                                              multi_class='multinomial'))])
-    LR_w2v_tfidf_gensim = Pipeline([("word2vec vectorizer", cgrams2vec.TfidfEmbeddingVectorizer(w2v)),
+    LR_w2v_tfidf = Pipeline([("word2vec vectorizer", cgrams2vec.TfidfEmbeddingVectorizer(w2v)),
                                    ("LR", LogisticRegression(random_state=0,
                                                              solver='lbfgs',
                                                              max_iter=100,
                                                              multi_class='multinomial'))])
 
-    LR_c2v_mean_gensim = Pipeline([("char2vec vectorizer", cgrams2vec.MeanEmbeddingVectorizer(c2v)),
+    LR_c2v_mean = Pipeline([("char2vec vectorizer", cgrams2vec.MeanEmbeddingVectorizer(c2v)),
                                    ("LR", LogisticRegression(random_state=0,
                                                              solver='lbfgs',
                                                              max_iter=100,
                                                              multi_class='multinomial'))])
-    LR_c2v_tfidf_gensim = Pipeline([("char2vec vectorizer", cgrams2vec.TfidfEmbeddingVectorizer(c2v)),
+    LR_c2v_tfidf = Pipeline([("char2vec vectorizer", cgrams2vec.TfidfEmbeddingVectorizer(c2v)),
                                     ("LR", LogisticRegression(random_state=0,
                                                               solver='lbfgs',
                                                               max_iter=100,
@@ -94,7 +94,7 @@ if __name__ == '__main__':
         # fix the learning rate, no decay
         d_model.min_alpha = d_model.alpha
 
-    LR_doc2vec_gensim = Pipeline([("doc2vec vectorizer", d_model.docvecs),
+    LR_doc2vec = Pipeline([("doc2vec vectorizer", d_model.docvecs),
                                   ("LR", LogisticRegression(random_state=0,
                                                             solver='lbfgs',
                                                             max_iter=100,
@@ -102,11 +102,11 @@ if __name__ == '__main__':
 
     # run all the models with logistic regression:
     all_models = [
-        ("LR_w2v_mean_gensim", LR_w2v_mean_gensim),
-        ("LR_w2v_tfidf_gensim", LR_w2v_tfidf_gensim),
-        ("LR_c2v_mean_gensim", LR_c2v_mean_gensim),
-        ("LR_c2v_tfidf_gensim", LR_c2v_tfidf_gensim),
-        ("LR_doc2vec_gensim", LR_doc2vec_gensim)
+        ("LR_w2v_mean", LR_w2v_mean),
+        ("LR_w2v_tfidf", LR_w2v_tfidf),
+        ("LR_c2v_mean", LR_c2v_mean),
+        ("LR_c2v_tfidf", LR_c2v_tfidf),
+        ("LR_doc2vec", LR_doc2vec)
     ]
 
     for name, model in all_models:
