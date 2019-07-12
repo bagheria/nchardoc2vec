@@ -116,6 +116,15 @@ def read_target(train_path):
             Y_dataset.append(i)
     return Y_dataset
 
+def read_target(file):
+    categories = os.listdir(train_path)
+    Y_dataset = []
+    for i in range(categories.__len__()):
+        data_path = train_path + str(categories[i]) + "/"
+        for j, input_file in enumerate(os.listdir(data_path)):
+            Y_dataset.append(i)
+    return Y_dataset
+
 
 class cgrams2vec:
     def __init__(self, data_file, embedding_dims=100, num_epochs=5, learning_rate=0.001):
