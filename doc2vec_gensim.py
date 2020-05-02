@@ -244,7 +244,8 @@ class Doc2Vec(BaseWordEmbeddingsModel):
     """Class for training, using and evaluating neural networks described in http://arxiv.org/pdf/1405.4053v2.pdf"""
 
     def __init__(self, documents=None, dm_mean=None, dm=1, dbow_words=0, dm_concat=0, dm_tag_count=1,
-                 docvecs=None, docvecs_mapfile=None, comment=None, trim_rule=None, callbacks=(), **kwargs):
+                 docvecs=None, docvecs_mapfile=None, comment=None, trim_rule=None, min_n=3, max_n=6,
+                 callbacks=(), **kwargs):
         """Initialize the model from an iterable of `documents`. Each document is a
         TaggedDocument object that will be used for training.
 
@@ -362,7 +363,8 @@ class Doc2Vec(BaseWordEmbeddingsModel):
             dm=dm, dm_concat=dm_concat, dm_tag_count=dm_tag_count,
             vector_size=self.vector_size, **trainables_kwargs)
 
-        self.wv = Word2VecKeyedVectors(self.vector_size)
+        from gensim.models.keyedvectors import FastTextKeyedVectors
+        self.wv = FastTextKeyedVectors(self.vector_size, min_n, max_n)
         self.docvecs = docvecs or Doc2VecKeyedVectors(self.vector_size, docvecs_mapfile)
 
         self.comment = comment
